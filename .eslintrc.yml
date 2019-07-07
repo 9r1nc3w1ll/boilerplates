@@ -1,0 +1,31 @@
+root: true
+
+env:
+  browser: true
+  es6: true
+
+extends:
+  - google
+  - plugin:vue/recommended
+
+parserOptions:
+  parser: 'babel-eslint'
+  allowImportExportEverywhere: true
+  ecmaVersion: 6
+  sourceType: module
+
+rules:
+  strict:
+    - error
+  indent:
+    - error
+    - 2
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
