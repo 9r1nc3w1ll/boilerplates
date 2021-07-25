@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  app:
+    container_name: app
+    build: .
+    tty: true
+    volumes:
+      - ./:/app
+    networks:
+      - db
+    ports:
+      - "8000:8000"
+      - "8081:8081"
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    networks:
+      - db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+
+networks:
+  db:
