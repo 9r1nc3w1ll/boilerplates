@@ -8,7 +8,7 @@
     "eslint:recommended",
     "standard",
     "plugin:@typescript-eslint/recommended",
-    "next"
+    "next/core-web-vitals"
   ],
   "env": {
     "es6": true,
@@ -101,10 +101,10 @@
       "error",
       {
         "memberSyntaxSortOrder": [
-          "none",
-          "all",
+          "single",
           "multiple",
-          "single"
+          "all",
+          "none"
         ]
       }
     ],
