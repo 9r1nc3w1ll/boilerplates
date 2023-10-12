@@ -1,37 +1,39 @@
-import React from "react";
+import { useEffect } from 'react';
 
-interface IdleTimeOutOptions {
+interface UseTimeOutOptions {
   action: () => void;
-  waitTime: number;
+  duration: number;
 }
 
-export function useIdleTimeOut({ action, waitTime }: IdleTimeOutOptions) {
-  React.useEffect(() => {
-    const events = [
-      "load",
-      "mousemove",
-      "mousedown",
-      "click",
-      "scroll",
-      "keypress",
-    ];
+export function useIdleTimeOut({ action, duration }: UseTimeOutOptions) {
+  useEffect(() => {
+    const events = ['load', 'mousemove', 'click', 'scroll', 'keydown'];
+    const storageKey = 'timeout';
+    const currentTime = new Date();
+    const timeout = localStorage.getItem(storageKey);
 
-    let timer = setTimeout(action, waitTime * 1000 * 60)
+    if (!timeout) {
+      localStorage.setItem(storageKey, String(currentTime.getTime() + (duration * 1000 * 60)));
+    }
+
+    const interval = setInterval(() => {
+      const timeout = localStorage.getItem(storageKey);
+      if (!!timeout && (new Date()).getTime() >= Number(timeout)) action();
+    }, 1000 * 15);
 
     const resetTimer = () => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(action, waitTime * 1000 * 60);
-    };
+      const currentTime = new Date();
+      localStorage.setItem(storageKey, String(currentTime.getTime() + (duration * 1000 * 60)));
+    }
 
-    [...events].forEach((item) => {
-      window.addEventListener(item, resetTimer);
+    [...events].forEach((event) => {
+      window.addEventListener(event, resetTimer);
     });
 
     return () => {
-      [...events].forEach((item) => {
-        window.removeEventListener(item, resetTimer);
+      clearInterval(interval);
+      [...events].forEach((event) => {
+        window.removeEventListener(event, resetTimer);
       });
     }
-
-  }, [action, waitTime]);
-}
+  }, [action, duration]);
